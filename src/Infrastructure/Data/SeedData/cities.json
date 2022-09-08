@@ -1,0 +1,186 @@
+﻿[
+  {
+    "Name": "Nur-Sultan",
+    "RegionId": 1
+  },
+  {
+    "Name": "Almaty",
+    "RegionId": 2
+  },
+  {
+    "Name": "Shymkent",
+    "RegionId": 3
+  },
+  {
+    "Name": "Semei",
+    "RegionId": 4
+  },
+  {
+    "Name": "Aqzhar",
+    "RegionId": 4
+  },
+  {
+    "Name": "Ayagoz",
+    "RegionId": 4
+  },
+  {
+    "Name": "Kurchatov",
+    "RegionId": 4
+  },
+  {
+    "Name": "Kaskelen",
+    "RegionId": 5
+  },
+  {
+    "Name": "Konaev",
+    "RegionId": 5
+  },
+  {
+    "Name": "Talgar",
+    "RegionId": 5
+  },
+  {
+    "Name": "Atyrau",
+    "RegionId": 6
+  },
+  {
+    "Name": "Kulsary",
+    "RegionId": 6
+  },
+  {
+    "Name": "Kokshetau",
+    "RegionId": 7
+  },
+  {
+    "Name": "Shuchinsk",
+    "RegionId": 7
+  },
+  {
+    "Name": "Aqtobe",
+    "RegionId": 8
+  },
+  {
+    "Name": "Shalqar",
+    "RegionId": 8
+  },
+  {
+    "Name": "Khromtau",
+    "RegionId": 8
+  },
+  {
+    "Name": "Oral",
+    "RegionId": 9
+  },
+  {
+    "Name": "Aqsai",
+    "RegionId": 9
+  },
+  {
+    "Name": "Zhympity",
+    "RegionId": 9
+  },
+  {
+    "Name": "Aqtau",
+    "RegionId": 10
+  },
+  {
+    "Name": "Zhanaozen",
+    "RegionId": 10
+  },
+  {
+    "Name": "Fort Shevchenko",
+    "RegionId": 10
+  },
+  {
+    "Name": "Pavlodar",
+    "RegionId": 11
+  },
+  {
+    "Name": "Ekibastuz",
+    "RegionId": 11
+  },
+  {
+    "Name": "Bayanaul",
+    "RegionId": 11
+  },
+  {
+    "Name": "Balqash",
+    "RegionId": 12
+  },
+  {
+    "Name": "Qaragandy",
+    "RegionId": 12
+  },
+  {
+    "Name": "Temirtau",
+    "RegionId": 12
+  },
+  {
+    "Name": "Qostanai",
+    "RegionId": 13
+  },
+  {
+    "Name": "Rudnyi",
+    "RegionId": 13
+  },
+  {
+    "Name": "Qyzylorda",
+    "RegionId": 14
+  },
+  {
+    "Name": "Baiqonyr",
+    "RegionId": 14
+  },
+  {
+    "Name": "Oskemen",
+    "RegionId": 15
+  },
+  {
+    "Name": "Ridder",
+    "RegionId": 15
+  },
+  {
+    "Name": "Petropavlovsk",
+    "RegionId": 16
+  },
+  {
+    "Name": "Aryqbalyq",
+    "RegionId": 16
+  },
+  {
+    "Name": "Turkestan",
+    "RegionId": 17
+  },
+  {
+    "Name": "Arys",
+    "RegionId": 17
+  },
+  {
+    "Name": "Zhetisai",
+    "RegionId": 17
+  },
+  {
+    "Name": "Zhezqazgan",
+    "RegionId": 18
+  },
+  {
+    "Name": "Satapayev",
+    "RegionId": 18
+  },
+  {
+    "Name": "Taraz",
+    "RegionId": 19
+  },
+  {
+    "Name": "Otar",
+    "RegionId": 19
+  },
+  {
+    "Name": "Taldyqorgan",
+    "RegionId": 20
+  },
+  {
+    "Name": "Zharkent",
+    "RegionId": 20
+  }
+]

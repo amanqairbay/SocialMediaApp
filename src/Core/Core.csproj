@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <None Remove="Microsoft.AspNetCore.Http" />
+    <None Remove="Entities\" />
+    <None Remove="DTOs\" />
+    <None Remove="DTOs\Photo\" />
+    <None Remove="DTOs\User\" />
+    <None Remove="Errors\" />
+    <None Remove="Exceptions\" />
+    <None Remove="Interfaces\" />
+    <None Remove="Specifications\" />
+    <None Remove="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="DTOs\Photo\" />
+    <Folder Include="DTOs\User\" />
+    <Folder Include="Errors\" />
+    <Folder Include="Exceptions\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Specifications\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+</Project>
