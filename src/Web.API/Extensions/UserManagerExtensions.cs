@@ -71,7 +71,7 @@ namespace Web.API.Extensions
                 .Include(x => x.Region)
                 .Include(x => x.City)
                 .Include(x => x.Photos)
-                .SingleAsync(x => x.Email == email);
+                .SingleOrDefaultAsync(x => x.Email == email);
 
             return user;
         }

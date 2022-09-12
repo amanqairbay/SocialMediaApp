@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Core.DTOs.User
 {
-    public class UserToRegisterDto
+    public class UserForRegisterDto
     {
         [Required]
         public string Name { get; set; } = String.Empty;

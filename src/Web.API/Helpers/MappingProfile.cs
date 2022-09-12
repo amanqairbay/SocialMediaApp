@@ -29,7 +29,9 @@ namespace Web.API.Helpers
                     opt.MapFrom(scr => scr.Photos.FirstOrDefault(p => p.IsMain)!.Url);
                 })
                 .ForMember(d => d.City, o => o.MapFrom(s => s.City!.Name))
-                .ForMember(d => d.Region, o => o.MapFrom(s => s.Region!.Name));
+                .ForMember(d => d.Region, o => o.MapFrom(s => s.Region!.Name))
+                .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender!.Name))
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status!.Name));
 
             // user for list dto
             CreateMap<AppUser, UserForListDto>()
@@ -42,6 +44,7 @@ namespace Web.API.Helpers
                 .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender!.Name))
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status!.Name));
 
+            //CreateMap<UserForRegisterDto, AppUser>();
             CreateMap<UserForUpdateDto, AppUser>();
 
             CreateMap<Photo, PhotoForDetailedDto>();

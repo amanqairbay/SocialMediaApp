@@ -3,6 +3,7 @@ using AutoMapper;
 using Core.DTOs.User;
 using Core.Entities;
 using Core.Errors;
+using Core.Interfaces;
 using Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,16 +19,20 @@ namespace Web.API.Controllers
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
+        private readonly IRepository<Region> _regionRepository;
+
         public AuthController(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ITokenService tokenService,
-            IMapper mapper)
+            IMapper mapper,
+            IRepository<Region> regionRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenService = tokenService;
             _mapper = mapper;
+            _regionRepository = regionRepository;
         }
 
         [Authorize]
@@ -70,6 +75,12 @@ namespace Web.API.Controllers
 
             if (!result.Succeeded) return Unauthorized(new ApiResponse(401));
 
+            var userFromDb = await _userManager.GetUserByEmailAsync(user.Email);
+
+            var userDto = _mapper.Map<AppUser, UserDto>(userFromDb!);
+
+            return userDto;
+            /*
             return new UserDto
             {
                 Id = user.Id,
@@ -91,12 +102,13 @@ namespace Web.API.Controllers
                 Region = user.Region!.Name,
                 PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)!.Url
             };
+            */
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register(UserToRegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register(UserForRegisterDto userToRegisterDto)
         {
-            if (CheckEmailExistsAsync(registerDto.Email).Result.Value)
+            if (CheckEmailExistsAsync(userToRegisterDto.Email).Result.Value)
             {
                 return new BadRequestObjectResult(new ApiValidationErrorResponse
                 {
@@ -106,24 +118,21 @@ namespace Web.API.Controllers
 
             var user = new AppUser
             {
-                Email = registerDto.Email,
-                UserName = registerDto.Email,
-                Name = registerDto.Name,
-                Surname = registerDto.Surname,
-                GenderId = 1,
-                StatusId = 1,
+                Email = userToRegisterDto.Email,
+                UserName = userToRegisterDto.Email,
+                Name = userToRegisterDto.Name,
+                Surname = userToRegisterDto.Surname,
+                GenderId = userToRegisterDto.GenderId,
                 DateOfBirth = DateTime.Now,
                 Created = DateTime.Now,
                 LastActive = DateTime.Now,
-                Interests = "Interests text",
-                CityId = 1,
-                RegionId = 1
             };
 
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            var result = await _userManager.CreateAsync(user, userToRegisterDto.Password);
 
             if (!result.Succeeded) return BadRequest(new ApiResponse(400));
 
+            /*
             return new UserDto
             {
                 Id = user.Id,
@@ -132,14 +141,24 @@ namespace Web.API.Controllers
                 Name = user.Name,
                 Surname = user.Surname,
                 GenderId = user.GenderId,
-                StatusId = user.StatusId,
+                Gender = "", //user.Gender!.Name,
+                StatusId = 1, //user.StatusId,
                 DateOfBirth = user.DateOfBirth,
                 Created = user.Created,
                 LastActive = user.LastActive,
-                Interests = user.Interests,
-                CityId = user.CityId,
-                RegionId = user.RegionId
+                Interests = "", // user.Interests,
+                CityId = 1, // user.CityId,
+                City = "", //user.City!.Name,
+                RegionId = 1, //user.RegionId,
+                Region = "",
+                PhotoUrl = ""
             };
+            */
+            var userFromDb = await _userManager.GetUserByEmailAsync(user.Email);
+
+            var userDto = _mapper.Map<AppUser, UserDto>(userFromDb!);
+
+            return userDto;
         }
     }
 }
