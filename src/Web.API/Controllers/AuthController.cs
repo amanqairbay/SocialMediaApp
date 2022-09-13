@@ -78,8 +78,9 @@ namespace Web.API.Controllers
             var userFromDb = await _userManager.GetUserByEmailAsync(user.Email);
 
             var userDto = _mapper.Map<AppUser, UserDto>(userFromDb!);
+            userDto.Token = _tokenService.CreateToken(user);
 
-            return userDto;
+            return Ok(userDto);
             /*
             return new UserDto
             {
@@ -157,6 +158,7 @@ namespace Web.API.Controllers
             var userFromDb = await _userManager.GetUserByEmailAsync(user.Email);
 
             var userDto = _mapper.Map<AppUser, UserDto>(userFromDb!);
+            userDto.Token = _tokenService.CreateToken(user);
 
             return userDto;
         }

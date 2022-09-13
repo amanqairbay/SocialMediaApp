@@ -20,6 +20,7 @@ namespace Web.API.Extensions
             services.AddSingleton<ITokenService, TokenService>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IPhotoRepository, PhotoRepository>();
+            services.AddScoped<LogUserActivity>();
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddIdentityServices(configuration);
             services.AddSwaggerDocumentation();

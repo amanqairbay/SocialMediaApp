@@ -31,7 +31,8 @@ namespace Web.API.Helpers
                 .ForMember(d => d.City, o => o.MapFrom(s => s.City!.Name))
                 .ForMember(d => d.Region, o => o.MapFrom(s => s.Region!.Name))
                 .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender!.Name))
-                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status!.Name));
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status!.Name))
+                .ForMember(d => d.LastActive, o => o.MapFrom(s => s.LastActive));
 
             // user for list dto
             CreateMap<AppUser, UserForListDto>()
