@@ -1,8 +1,11 @@
 ﻿using System;
 using Core.Entities;
+using Core.RequestFeatures;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Core.Specifications;
+using Infrastructure.Data;
 
 namespace Web.API.Extensions
 {
@@ -75,6 +78,20 @@ namespace Web.API.Extensions
 
             return user;
         }
+
+        public static async Task<PagedList<AppUser>> GetPagedListUsersAsync(this UserManager<AppUser> input, UserParameters userParameters)
+        {
+            var specification = new UserSpecification(userParameters);
+            var countSpecification = new UserWithFiltersForCountSpecification(userParameters);
+            var totalItems = await ApplySpecification(input, countSpecification).CountAsync();
+            var users = await ApplySpecification(input, specification).ToListAsync();
+           // var test = UserSpecificationEvaluator<AppUser>.GetQuery(input.Users.AsQueryable(), specification);
+
+            return new PagedList<AppUser>(users, totalItems, userParameters.PageIndex, userParameters.PageSize);
+        }
+        
+        private static IQueryable<AppUser> ApplySpecification(UserManager<AppUser> input, ISpecification<AppUser> specification) =>
+            UserSpecificationEvaluator<AppUser>.GetQuery(input.Users.AsQueryable(), specification);
     }
 }
 

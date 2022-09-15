@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Linq;
-using Core.Entities;
 using Core.Specifications;
-using Microsoft.AspNetCore.Identity;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Core.Entities;
 
 namespace Infrastructure.Data
 {
-    /// <summary>
-    /// Represents the entity specification evaluator
+    //// <summary>
+    /// Represents the user specification evaluator
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public class SpecificationEvaluator<TEntity> where TEntity : BaseEntity
+    public class UserSpecificationEvaluator<TEntity> where TEntity : class
     {
         /// <summary>
         /// Implements an extension for entity framework within applying interface.

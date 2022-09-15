@@ -24,6 +24,26 @@ namespace Core.Specifications
         /// </summary>
         public Expression<Func<T, object>> OrderBy { get; private set; } = default!;
 
+        /// <summary>
+        /// Order entities by descending
+        /// </summary>
+        public Expression<Func<T, object>> OrderByDescending { get; private set; } = default!;
+
+        /// <summary>
+        /// Takes only the required amount of data, set by page size
+        /// </summary>
+        public int Take { get; private set; }
+
+        /// <summary>
+        /// Skips a certain set of records, by the page number * page size
+        /// </summary>
+        public int Skip { get; private set; }
+
+        /// <summary>
+        /// A boolean value that determines whether paging is enabled for the scroll view
+        /// </summary>
+        public bool IsPagingEnabled { get; private set; }
+
         #region Constructors
 
         protected BaseSpecification()
@@ -54,6 +74,29 @@ namespace Core.Specifications
         protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
         {
             OrderBy = orderByExpression;
+        }
+
+        /// <summary>
+        /// Adds descending ordering
+        /// </summary>
+        /// <param name="orderByExpression">A function orders entities by expression</param>
+        protected void AddOrderByDescending(Expression<Func<T, object>> orderByDescendingExpression)
+        {
+            OrderByDescending = orderByDescendingExpression;
+        }
+
+        /// <summary>
+        /// Apply paging
+        /// </summary>
+        /// <param name="skip">Skips a certain set of records, by the page number * page size</param>
+        /// <param name="take">Takes only the required amount of data, set by page size</param>
+        protected void ApplyPaging(int skip, int take)
+        {
+            Skip = skip;
+            Take = take;
+
+            // determines whether paging is enabled for the scroll view
+            IsPagingEnabled = true;
         }
     }
 }
