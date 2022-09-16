@@ -30,8 +30,8 @@ namespace Web.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery]UserParameters userParameters)
         {
-            //var currentUserId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            //userParameters.UserId = currentUserId;
+            var currentUserId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            userParameters.UserId = currentUserId;
 
             var users = await _userManager.GetPagedListUsersAsync(userParameters);
             //if (string.IsNullOrEmpty(userParameters.Ge))

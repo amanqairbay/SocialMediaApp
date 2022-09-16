@@ -12,9 +12,24 @@ namespace Core.RequestFeatures
         public long? UserId { get; set; }
 
         /// <summary>
+        /// Gets or sets gender
+        /// </summary>
+        public long? GenderId { get; set; }
+
+        /// <summary>
+        /// Gets or sets min age
+        /// </summary>
+        public int MinAge { get; set; } = 18;
+
+        /// <summary>
+        /// Gets or sets max age
+        /// </summary>
+        public int MaxAge { get; set; } = 99;
+
+        /// <summary>
         /// Gets or sets sort
         /// </summary>
-        public string Sort { get; set; } = "name";
+        public string Sort { get; set; } = String.Empty;
 
         /// <summary>
         /// Gets or sets search

@@ -4,6 +4,7 @@ using Core.DTOs;
 using Core.DTOs.Photo;
 using Core.DTOs.User;
 using Core.Entities;
+using Web.API.Extensions;
 
 namespace Web.API.Helpers
 {
@@ -32,7 +33,8 @@ namespace Web.API.Helpers
                 .ForMember(d => d.Region, o => o.MapFrom(s => s.Region!.Name))
                 .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender!.Name))
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.Status!.Name))
-                .ForMember(d => d.LastActive, o => o.MapFrom(s => s.LastActive));
+                .ForMember(d => d.LastActive, o => o.MapFrom(s => s.LastActive))
+                .ForMember(d => d.Age, o => { o.MapFrom(d => d.DateOfBirth.CalculateAge()); });
 
             // user for list dto
             CreateMap<AppUser, UserForListDto>()
@@ -43,7 +45,9 @@ namespace Web.API.Helpers
                 .ForMember(d => d.City, o => o.MapFrom(s => s.City!.Name))
                 .ForMember(d => d.Region, o => o.MapFrom(s => s.Region!.Name))
                 .ForMember(d => d.Gender, o => o.MapFrom(s => s.Gender!.Name))
-                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status!.Name));
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status!.Name))
+                .ForMember(d => d.LastActive, o => o.MapFrom(s => s.LastActive))
+                .ForMember(d => d.Age, o => { o.MapFrom(d => d.DateOfBirth.CalculateAge()); });
 
             //CreateMap<UserForRegisterDto, AppUser>();
             CreateMap<UserForUpdateDto, AppUser>();

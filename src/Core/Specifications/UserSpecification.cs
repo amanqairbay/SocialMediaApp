@@ -7,7 +7,10 @@ namespace Core.Specifications
     public class UserSpecification : BaseSpecification<AppUser>
     {
         public UserSpecification(UserParameters userParameters)
-            : base(x => (string.IsNullOrEmpty(userParameters.Search) || x.Name.ToLower().Contains(userParameters.Search)))      
+            : base(x =>
+                (string.IsNullOrEmpty(userParameters.Search) || x.Name.ToLower().Contains(userParameters.Search)) &&
+                (!userParameters.UserId.HasValue || userParameters.UserId != x.Id) &&
+                (!userParameters.GenderId.HasValue || userParameters.GenderId == x.GenderId))      
         {
             AddInclude(x => x.Photos);
             AddOrderBy(x => x.Name);
@@ -17,11 +20,11 @@ namespace Core.Specifications
             {
                 switch (userParameters.Sort)
                 {
-                    case "surname":
-                        AddOrderBy(x => x.Surname);
+                    case "created":
+                        AddOrderByDescending(x => x.Created);
                         break;
                     default:
-                        AddOrderBy(x => x.Name);
+                        AddOrderByDescending(x => x.LastActive);
                         break;
                 }
             }

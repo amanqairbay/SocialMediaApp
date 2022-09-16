@@ -9,6 +9,7 @@ namespace Core.DTOs.User
         public string Email { get; set; } = String.Empty;
         public string Name { get; set; } = String.Empty;
         public string Surname { get; set; } = String.Empty;
+        public int Age { get; set; }
         public DateTime DateOfBirth { get; set; } = default!;
         public DateTime Created { get; set; } = default!;
         public DateTime LastActive { get; set; } = default!;

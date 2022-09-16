@@ -85,7 +85,14 @@ namespace Web.API.Extensions
             var countSpecification = new UserWithFiltersForCountSpecification(userParameters);
             var totalItems = await ApplySpecification(input, countSpecification).CountAsync();
             var users = await ApplySpecification(input, specification).ToListAsync();
-           // var test = UserSpecificationEvaluator<AppUser>.GetQuery(input.Users.AsQueryable(), specification);
+
+            if (userParameters.MinAge != 18 || userParameters.MaxAge != 99)
+            {
+                var minDob = DateTime.Today.AddYears(-userParameters.MaxAge - 1);
+                var maxDob = DateTime.Today.AddYears(-userParameters.MinAge);
+
+                users = users.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob).ToList();
+            }
 
             return new PagedList<AppUser>(users, totalItems, userParameters.PageIndex, userParameters.PageSize);
         }
