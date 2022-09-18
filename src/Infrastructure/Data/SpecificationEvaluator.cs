@@ -11,7 +11,7 @@ namespace Infrastructure.Data
     /// Represents the entity specification evaluator
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public class SpecificationEvaluator<TEntity> where TEntity : BaseEntity
+    public class SpecificationEvaluator<TEntity> where TEntity : class
     {
         /// <summary>
         /// Implements an extension for entity framework within applying interface.

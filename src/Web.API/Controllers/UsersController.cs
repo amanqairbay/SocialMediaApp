@@ -11,6 +11,9 @@ using Web.API.Helpers;
 using Core.RequestFeatures;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
+using Core.Interfaces;
+using Core.Specifications;
+using Core.Exceptions;
 
 namespace Web.API.Controllers
 {
@@ -19,12 +22,17 @@ namespace Web.API.Controllers
     public class UsersController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IRepository<Like> _likeRepository;
         private readonly IMapper _mapper;
 
-        public UsersController(UserManager<AppUser> userManager, IMapper mapper)
+        public UsersController(
+            UserManager<AppUser> userManager,
+            IMapper mapper,
+            IRepository<Like> likeRepository)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _likeRepository = likeRepository;
         }
 
         [HttpGet]
@@ -69,6 +77,35 @@ namespace Web.API.Controllers
 
             throw new Exception($"Updating user {id} failed on save");
         }
+
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> LikeUser(long id, long recipientId)
+        {
+            if (id != long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value))
+                return Unauthorized();
+
+            var specification = new LikeSpecification(id, recipientId);
+            var like = await _likeRepository.GetEntityWithSpecification(specification);
+
+            if (like != null) throw new BadRequestException("You already like this user");
+
+            if (await _userManager.GetUserByIdAsync(recipientId) == null)
+                throw new NotFoundException($"The user with recipient id: {recipientId} doesn't exist in the database.");
+
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+
+            _likeRepository.Add(like);
+
+            if (await _likeRepository.SaveAll()) return Ok();
+
+            return BadRequest("Failde to like user");
+        }
+
+        
     }
 }
 

@@ -94,9 +94,30 @@ namespace Web.API.Extensions
                 users = users.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob).ToList();
             }
 
+            if (userParameters.Likers || userParameters.Likees)
+            {
+                var userLikers = await GetUserLikes(input, (long)userParameters.UserId!, userParameters.Likers);
+                users = users.Where(u => userLikers.Contains(u.Id)).ToList();
+            }
+
             return new PagedList<AppUser>(users, totalItems, userParameters.PageIndex, userParameters.PageSize);
         }
-        
+
+        private static async Task<IEnumerable<long>> GetUserLikes(this UserManager<AppUser> input, long id, bool likers)
+        {
+            var user = await input.Users
+                .Include(x => x.Likers)
+                .Include(x => x.Likees)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (likers)
+            {
+                return user!.Likers.Where(u => u.LikeeId == id).Select(i => i.LikerId);
+            }
+
+            return user!.Likees.Where(u => u.LikerId == id).Select(i => i.LikeeId);
+        }
+
         private static IQueryable<AppUser> ApplySpecification(UserManager<AppUser> input, ISpecification<AppUser> specification) =>
             UserSpecificationEvaluator<AppUser>.GetQuery(input.Users.AsQueryable(), specification);
     }

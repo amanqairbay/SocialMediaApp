@@ -35,6 +35,16 @@ namespace Core.RequestFeatures
         /// Gets or sets search
         /// </summary>
         public string Search { get; set; } = String.Empty;
+
+        /// <summary>
+        /// Gets or sets likees
+        /// </summary>
+        public bool Likees { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets likers
+        /// </summary>
+        public bool Likers { get; set; } = false;
     }
 }
 

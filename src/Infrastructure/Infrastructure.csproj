@@ -19,6 +19,7 @@
     <None Remove="Data\" />
     <None Remove="Services\" />
     <None Remove="Data\SeedData\" />
+    <None Remove="Data\Configuration\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
@@ -32,5 +33,6 @@
     <Folder Include="Data\" />
     <Folder Include="Services\" />
     <Folder Include="Data\SeedData\" />
+    <Folder Include="Data\Configuration\" />
   </ItemGroup>
 </Project>

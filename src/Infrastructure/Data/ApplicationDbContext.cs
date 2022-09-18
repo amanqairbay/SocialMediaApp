@@ -15,6 +15,7 @@ namespace Infrastructure.Data
         public DbSet<City> Cities { get; set; } = default!;
         public DbSet<Gender> Genders { get; set; } = default!;
         public DbSet<Status> Statuses { get; set; } = default!;
+        public DbSet<Like> Likes { get; set; } = default!;
         #endregion Fields
 
         #region Constructor

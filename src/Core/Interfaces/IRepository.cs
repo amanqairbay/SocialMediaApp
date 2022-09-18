@@ -8,7 +8,7 @@ namespace Core.Interfaces
     /// Represents the entity repository
     /// </summary>
     /// <typeparam name="T">Entity type</typeparam>
-    public interface IRepository<T> where T : BaseEntity
+    public interface IRepository<T> where T : class
     {
         /// <summary>
         /// Get the entity entry
@@ -48,6 +48,12 @@ namespace Core.Interfaces
         /// The task result contains the list of entity entries with specification
         /// </returns>
         Task<IReadOnlyList<T>> GetAllWithSpecificationAsync(ISpecification<T> specification);
+
+        /// <summary>
+        /// Adds the entity
+        /// </summary>
+        /// <param name="entity"></param>
+        void Add(T entity);
 
         /// <summary>
         /// Deletes the entity

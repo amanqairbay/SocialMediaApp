@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Data.Migartions
+namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220902171833_DatabaseCreate")]
-    partial class DatabaseCreate
+    [Migration("20220916153033_AddLikeEntity")]
+    partial class AddLikeEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -170,6 +170,21 @@ namespace Infrastructure.Data.Migartions
                     b.HasKey("Id");
 
                     b.ToTable("Genders");
+                });
+
+            modelBuilder.Entity("Core.Entities.Like", b =>
+                {
+                    b.Property<long>("LikerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LikeeId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LikerId", "LikeeId");
+
+                    b.HasIndex("LikeeId");
+
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("Core.Entities.Photo", b =>
@@ -413,6 +428,25 @@ namespace Infrastructure.Data.Migartions
                     b.Navigation("Region");
                 });
 
+            modelBuilder.Entity("Core.Entities.Like", b =>
+                {
+                    b.HasOne("Core.Entities.AppUser", "Likee")
+                        .WithMany("Likers")
+                        .HasForeignKey("LikeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Core.Entities.AppUser", "Liker")
+                        .WithMany("Likees")
+                        .HasForeignKey("LikerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Likee");
+
+                    b.Navigation("Liker");
+                });
+
             modelBuilder.Entity("Core.Entities.Photo", b =>
                 {
                     b.HasOne("Core.Entities.AppUser", "AppUser")
@@ -475,6 +509,10 @@ namespace Infrastructure.Data.Migartions
 
             modelBuilder.Entity("Core.Entities.AppUser", b =>
                 {
+                    b.Navigation("Likees");
+
+                    b.Navigation("Likers");
+
                     b.Navigation("Photos");
                 });
 

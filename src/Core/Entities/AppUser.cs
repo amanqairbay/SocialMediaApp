@@ -84,6 +84,16 @@ namespace Core.Entities
         /// Gets or sets user photos
         /// </summary>
         public ICollection<Photo> Photos { get; set; } = default!;
+
+        /// <summary>
+        /// Gets or sets user likers
+        /// </summary>
+        public ICollection<Like> Likers { get; set; } = default!;
+
+        /// <summary>
+        /// Gets or sets user likees
+        /// </summary>
+        public ICollection<Like> Likees { get; set; } = default!;
     }
 }
 

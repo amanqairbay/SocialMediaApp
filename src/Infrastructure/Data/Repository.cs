@@ -10,7 +10,7 @@ namespace Infrastructure.Data
     /// Represents the entity repository implementation
     /// </summary>
     /// <typeparam name="T">Entity type</typeparam>
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _context;
 
@@ -18,6 +18,8 @@ namespace Infrastructure.Data
         {
             _context = context;
         }
+
+        #region Public Methods
 
         /// <summary>
         /// Gets the entity entry by identifier
@@ -60,6 +62,16 @@ namespace Infrastructure.Data
         public async Task<IReadOnlyList<T>> GetAllWithSpecificationAsync(ISpecification<T> specification) =>
             await ApplySpecification(specification).ToListAsync();
 
+        /// <summary>
+        /// Adds the entity
+        /// </summary>
+        /// <param name="entity"></param>
+        public void Add(T entity) => _context.Set<T>().Add(entity);
+
+        /// <summary>
+        /// Deletes the entity
+        /// </summary>
+        /// <param name="entity"></param>
         public void Delete(T entity) => _context.Remove(entity);
 
         /// <summary>
@@ -82,6 +94,10 @@ namespace Infrastructure.Data
         public async Task<int> CountAsync(ISpecification<T> specification) =>
             await ApplySpecification(specification).CountAsync();
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         /// <summary>
         /// Applies the specification to implement an extension for the entity framework in the interface application
         /// </summary>
@@ -89,6 +105,8 @@ namespace Infrastructure.Data
         /// <returns>The result includes all expression-based includes</returns>
         private IQueryable<T> ApplySpecification(ISpecification<T> specification) =>
             SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(), specification);
+
+        #endregion Private Methods 
     }
 }
 

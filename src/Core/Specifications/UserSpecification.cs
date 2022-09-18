@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using Core.Entities;
 using Core.RequestFeatures;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.Specifications
 {
@@ -10,9 +13,12 @@ namespace Core.Specifications
             : base(x =>
                 (string.IsNullOrEmpty(userParameters.Search) || x.Name.ToLower().Contains(userParameters.Search)) &&
                 (!userParameters.UserId.HasValue || userParameters.UserId != x.Id) &&
-                (!userParameters.GenderId.HasValue || userParameters.GenderId == x.GenderId))      
+                (!userParameters.GenderId.HasValue || userParameters.GenderId == x.GenderId))
         {
             AddInclude(x => x.Photos);
+            AddInclude(x => x.Likers);
+            AddInclude(x => x.Likees);
+
             AddOrderBy(x => x.Name);
             ApplyPaging(userParameters.PageSize * (userParameters.PageIndex - 1), userParameters.PageSize);
 
@@ -28,6 +34,8 @@ namespace Core.Specifications
                         break;
                 }
             }
+
+            
         }
 
         public UserSpecification(long userId) : base(x => x.Id == userId)
