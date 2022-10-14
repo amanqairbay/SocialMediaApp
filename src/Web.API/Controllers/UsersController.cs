@@ -48,7 +48,7 @@ namespace Web.API.Controllers
         /// <response code="404">If the user doesn't exist.</response>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(long id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -68,9 +68,10 @@ namespace Web.API.Controllers
         /// <response code="400">If the user update could not be saved.</response>
         /// <response code="401">If the user is not logged in.</response>
         /// <response code="404">If the user doesn't exist.</response>
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(long id, UserForUpdateDto userForUpdateDto)
         {
@@ -87,9 +88,14 @@ namespace Web.API.Controllers
         /// <returns>
         /// A task that represents the asynchronous operation, containing the result of the user's like.
         /// </returns>
+        /// <response code="200">If the user like is successfull.</response>
         /// <response code="400">If the user already like or failed to like.</response>
         /// <response code="401">If the user is not logged in.</response>
         /// <response code="404">If the user (recipient) doesn't exist.</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [HttpPost("{id}/like/{recipientId}")]
         public async Task<IActionResult> LikeUser(long id, long recipientId)
         {
