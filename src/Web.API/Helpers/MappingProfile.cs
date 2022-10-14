@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using Core.DTOs;
+using Core.DTOs.Message;
 using Core.DTOs.Photo;
 using Core.DTOs.User;
 using Core.Entities;
@@ -58,6 +59,13 @@ namespace Web.API.Helpers
 
             CreateMap<City, CityDto>();
             CreateMap<Region, RegionDto>();
+            CreateMap<Gender, GenderDto>();
+            CreateMap<Status, StatusDto>();
+
+            CreateMap<MessageForCreationDto, Message>().ReverseMap();
+            CreateMap<Message, MessageToReturnDto>()
+                .ForMember(d => d.SenderPhotoUrl, opt => opt.MapFrom(u => u.Sender.Photos.FirstOrDefault(p => p.IsMain)!.Url))
+                .ForMember(d => d.RecipientPhotoUrl, opt => opt.MapFrom(u => u.Recipient.Photos.FirstOrDefault(p => p.IsMain)!.Url));
         }
     }
 }

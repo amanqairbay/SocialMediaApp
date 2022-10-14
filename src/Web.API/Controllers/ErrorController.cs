@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Errors;
+﻿using Core.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.API.Controllers
@@ -11,7 +10,6 @@ namespace Web.API.Controllers
         public IActionResult Error(int code)
         {
             return new ObjectResult(new ApiException(code));
-            //return new ObjectResult(new ApiException(code));
         }
     }
 }

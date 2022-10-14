@@ -8,7 +8,7 @@ using System.Text.Json;
 namespace Web.API.Middleware
 {
     /// <summary>
-    /// Api exception middleware
+    /// Api exception middleware.
     /// </summary>
     public static class ExceptionMiddleware
     {
@@ -27,6 +27,7 @@ namespace Web.API.Middleware
                         {
                             NotFoundException => StatusCodes.Status404NotFound,
                             BadRequestException => StatusCodes.Status400BadRequest,
+                            UnauthorizedException => StatusCodes.Status401Unauthorized,
                             _ => StatusCodes.Status500InternalServerError
                         };
 

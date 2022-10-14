@@ -19,9 +19,10 @@
     <None Remove="Specifications\" />
     <None Remove="Services\" />
     <None Remove="RequestParameters\" />
+    <None Remove="DTOs\Message\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
   </ItemGroup>
   <ItemGroup>
@@ -35,5 +36,6 @@
     <Folder Include="Specifications\" />
     <Folder Include="Services\" />
     <Folder Include="RequestFeatures\" />
+    <Folder Include="DTOs\Message\" />
   </ItemGroup>
 </Project>

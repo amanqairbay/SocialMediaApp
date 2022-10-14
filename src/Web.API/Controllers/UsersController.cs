@@ -1,19 +1,11 @@
-﻿using System;
-using AutoMapper;
-using Core.DTOs.User;
-using Core.Entities;
+﻿using Core.DTOs.User;
+using Core.Errors;
+using Core.RequestFeatures;
+using Core.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using Web.API.Extensions;
 using Web.API.Helpers;
-using Core.RequestFeatures;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
-using Core.Interfaces;
-using Core.Specifications;
-using Core.Exceptions;
 
 namespace Web.API.Controllers
 {
@@ -21,91 +13,90 @@ namespace Web.API.Controllers
     [Authorize]
     public class UsersController : BaseApiController
     {
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IRepository<Like> _likeRepository;
-        private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public UsersController(
-            UserManager<AppUser> userManager,
-            IMapper mapper,
-            IRepository<Like> likeRepository)
+        public UsersController(IUserService userService)
         {
-            _userManager = userManager;
-            _mapper = mapper;
-            _likeRepository = likeRepository;
+            _userService = userService;
         }
 
+        /// <summary>
+        /// Gets and returns a list of users by parameters.
+        /// </summary>
+        /// <param name="userParams">The user params to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the list of users.
+        /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetUsers([FromQuery]UserParameters userParameters)
+        public async Task<IActionResult> GetPgedListUsers([FromQuery]UserParameters userParams)
         {
-            var currentUserId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            userParameters.UserId = currentUserId;
+            var (users, metaData) = await _userService.GetPagedListUsersAsync(userParams);
 
-            var users = await _userManager.GetPagedListUsersAsync(userParameters);
-            //if (string.IsNullOrEmpty(userParameters.Ge))
+            Response.AddPagination(metaData.CurrentPage, metaData.PageSize, metaData.TotalCount, metaData.TotalPages);
 
-            //var users = await _userManager.GetAllUsersAsync();
-            var usersDto = _mapper.Map<IEnumerable<UserForListDto>>(users);
-
-            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
-
-            return Ok(usersDto);
+            return Ok(users);
         }
 
+        /// <summary>
+        /// Gets and returns a user, if any, who has the specified <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">The user identifier to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the user matching the specified <paramref name="id" /> if it exists.
+        /// </returns>
+        /// <response code="200">If the user exists.</response>
+        /// <response code="404">If the user doesn't exist.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(long id)
         {
-            var user = await _userManager.GetUserByIdAsync(id);
-            var userDto = _mapper.Map<AppUser, UserForDetailedDto>(user!);
+            var user = await _userService.GetUserByIdAsync(id);
 
-            return Ok(userDto);
+            return Ok(user);
         }
 
+        /// <summary>
+        /// Updates the user.
+        /// </summary>
+        /// <param name="id">The user identifier to get for.</param>
+        /// <param name="userForUpdateDto">The user to update for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the result of the user update.
+        /// </returns>
+        /// <response code="204">if the user is successfully updated.</response>
+        /// <response code="400">If the user update could not be saved.</response>
+        /// <response code="401">If the user is not logged in.</response>
+        /// <response code="404">If the user doesn't exist.</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(long id, UserForUpdateDto userForUpdateDto)
         {
-            if (id != long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value))
-                return Unauthorized();
+            await _userService.UpdateUser(id, userForUpdateDto);
 
-            var userFromDb = await _userManager.GetUserByIdAsync(id);
-
-            var userDto = _mapper.Map(userForUpdateDto, userFromDb);
-
-            var result = await _userManager.UpdateAsync(userDto!);
-
-            if (result.Succeeded) return NoContent();
-
-            throw new Exception($"Updating user {id} failed on save");
+            return NoContent();
         }
 
+        /// <summary>
+        /// Likes the user.
+        /// </summary>
+        /// <param name="id">The user identifier to get for.</param>
+        /// <param name="recipientId">The recipient identifier to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the result of the user's like.
+        /// </returns>
+        /// <response code="400">If the user already like or failed to like.</response>
+        /// <response code="401">If the user is not logged in.</response>
+        /// <response code="404">If the user (recipient) doesn't exist.</response>
         [HttpPost("{id}/like/{recipientId}")]
         public async Task<IActionResult> LikeUser(long id, long recipientId)
         {
-            if (id != long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value))
-                return Unauthorized();
+            await _userService.LikeUser(id, recipientId);
 
-            var specification = new LikeSpecification(id, recipientId);
-            var like = await _likeRepository.GetEntityWithSpecification(specification);
-
-            if (like != null) throw new BadRequestException("You already like this user");
-
-            if (await _userManager.GetUserByIdAsync(recipientId) == null)
-                throw new NotFoundException($"The user with recipient id: {recipientId} doesn't exist in the database.");
-
-            like = new Like
-            {
-                LikerId = id,
-                LikeeId = recipientId
-            };
-
-            _likeRepository.Add(like);
-
-            if (await _likeRepository.SaveAll()) return Ok();
-
-            return BadRequest("Failde to like user");
+            return Ok();
         }
-
-        
     }
 }
 

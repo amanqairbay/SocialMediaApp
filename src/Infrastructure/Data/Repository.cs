@@ -38,7 +38,7 @@ namespace Infrastructure.Data
         /// A task that represents the asynchronous operation
         /// The task result contains the entity entries
         /// </returns>
-        public async Task<IReadOnlyList<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
+        public async Task<IEnumerable<T>> GetAllAsync() => await _context.Set<T>().ToListAsync();
 
         /// <summary>
         /// Gets entity entries with specification
@@ -59,7 +59,7 @@ namespace Infrastructure.Data
         /// A task that represents the asynchronous operation
         /// The task result contains the list of entity entries with specification
         /// </returns>
-        public async Task<IReadOnlyList<T>> GetAllWithSpecificationAsync(ISpecification<T> specification) =>
+        public async Task<IEnumerable<T>> GetAllWithSpecificationAsync(ISpecification<T> specification) =>
             await ApplySpecification(specification).ToListAsync();
 
         /// <summary>

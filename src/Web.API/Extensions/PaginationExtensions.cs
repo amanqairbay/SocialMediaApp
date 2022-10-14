@@ -1,5 +1,4 @@
-﻿using System;
-using Core.RequestFeatures;
+﻿using Core.RequestFeatures;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 

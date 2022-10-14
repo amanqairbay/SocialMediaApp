@@ -1,115 +1,161 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.DTOs;
 using Core.Entities;
-using Core.Exceptions;
+using Core.Errors;
 using Core.Interfaces;
+using Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.API.Controllers
 {
     public class UserSettingsController : BaseApiController
     {
-        private readonly IRepository<Region> _regionRepository;
-        private readonly IRepository<City> _cityRepository;
-        private readonly IRepository<Gender> _genderRepository;
-        private readonly IRepository<Status> _statusRepository;
-        private readonly IMapper _mapper;
+        private readonly IUserSettingsService _userSettingsService;
 
-        public UserSettingsController(
-            IRepository<Region> regionRepository,
-            IRepository<City> cityRepository,
-            IRepository<Gender> genderRepository,
-            IRepository<Status> statusRepository,
-            IMapper mapper)
+        public UserSettingsController(IUserSettingsService userSettingsService)
         {
-            _regionRepository = regionRepository;
-            _cityRepository = cityRepository;
-            _genderRepository = genderRepository;
-            _statusRepository = statusRepository;
-            _mapper = mapper;
+            _userSettingsService = userSettingsService;
         }
 
+        /// <summary>
+        /// Gets and returns a list of regions.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the list of regions.
+        /// </returns>
+        /// <response code="200">If all regions successfully returned.</response>
         [HttpGet("regions")]
-        public async Task<ActionResult<IReadOnlyList<RegionDto>>> GetRegionsAsync()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRegionsAsync()
         {
-            var regions = await _regionRepository.GetAllAsync();
-            var regionsDto = _mapper.Map<IReadOnlyList<Region>, IReadOnlyList<RegionDto>>(regions);
+            var regions = await _userSettingsService.GetRegionsAsync();
 
-            return Ok(regionsDto);
+            return Ok(regions);
         }
 
+        /// <summary>
+        /// Gets and returns a region, if any, that has the specified <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">The region identifier to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the region matching the specified <paramref name="regionId" /> if it exists.
+        /// </returns>
+        /// <response code="200">If the region successfully returned.</response>
+        /// <response code="404">If the region doesn't exist.</response>
         [HttpGet("regions/{id}")]
-        public async Task<ActionResult<RegionDto>> GetRegionByIdAsync(long id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetRegionByIdAsync(long id)
         {
-            var region = await _regionRepository.GetByIdAsync(id);
+            var region = await _userSettingsService.GetRegionByIdAsync(id);
 
-            if (region is null)
-                throw new NotFoundException($"The region with id: {id} doesn't exist in the database.");
-
-            var regionDto = _mapper.Map<Region, RegionDto>(region!);
-
-            return regionDto;
+            return Ok(region);
         }
 
+        /// <summary>
+        /// Gets and returns a city, if any, that has the specified <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">The city identifier to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the region matching the specified <paramref name="cityId" /> if it exists.
+        /// </returns>
+        /// <response code="200">If all cities successfully returned.</response>
         [HttpGet("cities")]
-        public async Task<ActionResult<IReadOnlyList<CityDto>>> GetCitiesAsync()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCitiesAsync()
         {
-            var cities = await _cityRepository.GetAllAsync();
-            var citiesDto = _mapper.Map<IReadOnlyList<City>, IReadOnlyList<CityDto>>(cities);
+            var cities = await _userSettingsService.GetCitiesAsync();
 
-            return Ok(citiesDto);
+            return Ok(cities);
         }
 
+        /// <summary>
+        /// Gets and returns a city, if any, that has the specified <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">The city identifier to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the region matching the specified <paramref name="cityId" /> if it exists.
+        /// </returns>
+        /// <response code="200">If the city successfully returned.</response>
+        /// <response code="404">If the city doesn't exist.</response>
         [HttpGet("cities/{id}")]
-        public async Task<ActionResult<CityDto>> GetCityByIdAsync(long id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCityByIdAsync(long id)
         {
-            var city = await _cityRepository.GetByIdAsync(id);
+            var city = await _userSettingsService.GetCityByIdAsync(id);
 
-            if (city is null)
-                throw new NotFoundException($"The city with id: {id} doesn't exist in the database.");
-
-            var cityDto = _mapper.Map<City, CityDto>(city!);
-
-            return cityDto;
+            return Ok(city);
         }
 
+        /// <summary>
+        /// Gets and returns a list of genders.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the list of genders.
+        /// </returns>
+        /// <response code="200">If all genders successfully returned.</response>
         [HttpGet("genders")]
-        public async Task<ActionResult<Gender>> GetGenders()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Gender>> GetGendersAsync()
         {
-            var genders = await _genderRepository.GetAllAsync();
+            var genders = await _userSettingsService.GetGendersAsync();
 
             return Ok(genders);
         }
 
+        /// <summary>
+        /// Gets and returns a gender, if any, that has the specified <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">The gender identifier to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the gender matching the specified <paramref name="genderId" /> if it exists.
+        /// </returns>
+        /// <response code="200">If the gender successfully returned.</response>
+        /// <response code="404">If the gender doesn't exist.</response>
         [HttpGet("genders/{id}")]
-        public async Task<ActionResult<Gender>> GetGenderByIdAsync(long id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetGenderByIdAsync(long id)
         {
-            var gender = await _genderRepository.GetByIdAsync(id);
+            var gender = await _userSettingsService.GetGenderByIdAsync(id);
 
-            if (gender is null)
-                throw new NotFoundException($"The gender with id: {id} doesn't exist in the database.");
-
-            return gender;
+            return Ok(gender);
         }
 
+        /// <summary>
+        /// Gets and returns a list of statuses.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the list of statuses.
+        /// </returns>
+        /// <response code="200">If all statuses successfully returned.</response>
         [HttpGet("statuses")]
-        public async Task<ActionResult<Status>> GetStatuses()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Status>> GetStatusesAsync()
         {
-            var statuses = await _statusRepository.GetAllAsync();
+            var statuses = await _userSettingsService.GetStatusesAsync();
 
             return Ok(statuses);
         }
 
+        /// <summary>
+        /// Gets and returns a status, if any, that has the specified <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">The status identifier to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the status matching the specified <paramref name="statusId" /> if it exists.
+        /// </returns>
+        /// <response code="200">If the status successfully returned.</response>
+        /// <response code="404">If the status doesn't exist.</response>
         [HttpGet("statuses/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Status>> GetStatusesByIdAsync(long id)
         {
-            var status = await _statusRepository.GetByIdAsync(id);
+            var status = await _userSettingsService.GetStatusByIdAsync(id);
 
-            if (status is null)
-                throw new NotFoundException($"The status with id: {id} doesn't exist in the database.");
-
-            return status;
+            return Ok(status);
         }
     }
 }

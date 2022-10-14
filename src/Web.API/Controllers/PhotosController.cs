@@ -1,18 +1,8 @@
-﻿using System;
-using AutoMapper;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-using Core.DTOs.Photo;
-using Core.Entities;
-using Core.Interfaces;
+﻿using Core.DTOs.Photo;
+using Core.Errors;
+using Core.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System.Security.Claims;
-using System.Xml.Linq;
-using Web.API.Helpers;
-using Web.API.Extensions;
 
 namespace Web.API.Controllers
 {
@@ -20,146 +10,100 @@ namespace Web.API.Controllers
     [Route("api/users/{userId}/[controller]")]
     public class PhotosController : BaseApiController
     {
-        private readonly IMapper _mapper;
-        private readonly IRepository<Photo> _photoRepository;
-        private readonly IPhotoRepository _repository;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
-        private Cloudinary _cloudinary;
+        private readonly IPhotoService _photoService;
+        private readonly IUserService _userService;
 
         public PhotosController(
-            IMapper mapper,
-            IRepository<Photo> photoRepository,
-            IPhotoRepository repository,
-            UserManager<AppUser> userManager,
-            IOptions<CloudinarySettings> cloudinaryConfig)
+            IPhotoService photoService,
+            IUserService userService)
         {
-            _mapper = mapper;
-            _photoRepository = photoRepository;
-            _repository = repository;
-            _userManager = userManager;
-            _cloudinaryConfig = cloudinaryConfig;
-
-            Account account = new Account(
-                _cloudinaryConfig.Value.CloudName,
-                _cloudinaryConfig.Value.ApiKey,
-                _cloudinaryConfig.Value.ApiSecret
-            );
-
-            _cloudinary = new Cloudinary(account);
+            _photoService = photoService;
+            _userService = userService;
         }
 
+        /// <summary>
+        /// Gets and returns a photo, if any, that has the specified <paramref name="id" />.
+        /// </summary>
+        /// <param name="id">The photo identifier to get for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing the photo matching the specified <paramref name="photoId" /> if it exists.
+        /// </returns>
+        /// <response code="200">If the photo exists.</response>
+        /// <response code="404">If the photo doesn't exist.</response>
         [HttpGet("/{id}", Name = "GetPhoto")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetPhoto(long id)
         {
-            var photoFromDb = await _photoRepository.GetByIdAsync(id);
-            var photoDto = _mapper.Map<PhotoForReturnDto>(photoFromDb);
+            var photo = await _photoService.GetPhotoByIdAsync(id);
 
-            return Ok(photoDto);
+            return Ok(photo);
         }
 
+        /// <summary>
+        /// Adds a new photo for the user.
+        /// </summary>
+        /// <param name="userId">The user identifier to get for.</param>
+        /// <param name="photoForCreationDto">The photo to return for.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation, containing a photo and the result of adding it.
+        /// </returns>
+        /// <response code="201">If the photo successfully added.</response>
+        /// <response code="400">If the photo could not be added.</response>
+        /// <response code="401">If the user is not logged in.</response>
         [HttpPost]
-        [Obsolete]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> AddPhotoForUser(long userId, [FromForm] PhotoForCreationDto photoForCreationDto)
         {
-            if (userId != long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value))
-                return Unauthorized();
-
-            var userFromDb = await _userManager.GetUserByIdAsync(userId);
-
-            var file = photoForCreationDto.File;
-            var uploadResult = new ImageUploadResult();
-
-            if (file.Length > 0)
-            {
-                using (var stream = file.OpenReadStream())
-                {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
-                    };
-
-                    uploadResult = _cloudinary.Upload(uploadParams);
-                }
-            }
-
-            photoForCreationDto.Url = uploadResult.Uri.ToString();
-            photoForCreationDto.PublicId = uploadResult.PublicId;
-
-            var photo = _mapper.Map<Photo>(photoForCreationDto);
-
-            if (!userFromDb!.Photos.Any(u => u.IsMain)) { photo.IsMain = true; }
-
-            userFromDb.Photos.Add(photo);
-
-            if (await _photoRepository.SaveAll())
-            {
-                var photoForReturnDto = _mapper.Map<PhotoForReturnDto>(photo);
-                return CreatedAtRoute("GetPhoto", new { id = photo.Id }, photoForReturnDto);
-            }
-
-            return BadRequest("Could not add the photo");
+            var (photoId, photoToReturn) = await _photoService.AddPhotoForUser(userId, photoForCreationDto);
+            
+            return CreatedAtRoute("GetPhoto", new { id = photoId }, photoToReturn); 
         }
 
+        /// <summary>
+        /// Sets the user's main photo. 
+        /// </summary>
+        /// <param name="userId">The user identifier to get for.</param>
+        /// <param name="id">The photo identifier to set for.</param>
+        /// <returns>
+        /// A task that represents an asynchronous operation containing the result of setting the main photo.
+        /// </returns>
+        /// <response code="204">If the photo is successfully installed as the main one.</response>
+        /// <response code="400">If the photo is already set as the main one or cannot be set.</response>
+        /// <response code="401">If the user is not logged in.</response>
         [HttpPost("{id}/setMain")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> SetMainPhoto(long userId, long id)
         {
-            if (userId != long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value))
-                return Unauthorized();
+            await _photoService.SetMainPhoto(userId, id);
 
-            var userFromDb = await _userManager.GetUserByIdAsync(userId);
-
-            if (!userFromDb!.Photos.Any(p => p.Id == id)) return Unauthorized();
-
-            var photoFromDb = await _photoRepository.GetByIdAsync(id);
-
-            if (photoFromDb!.IsMain) return BadRequest("This is already the main photo");
-
-            var currentMainPhoto = await _repository.GetMainPhotoForUser(userId);
-            currentMainPhoto!.IsMain = false;
-
-            photoFromDb.IsMain = true;
-
-            if (await _photoRepository.SaveAll()) return NoContent();
-
-            return BadRequest("Could not set photo to main");
+            return NoContent();
         }
 
+        /// <summary>
+        /// Deletes the photo, if any, that has the specified <paramref name="id" />.
+        /// </summary>
+        /// <param name="userId">The user identifier to get for.</param>
+        /// <param name="id">The photo identifier to get for.</param>
+        /// <returns>
+        /// A task that represents an asynchronous operation containing the result of deleting the user photo.
+        /// </returns>
+        /// <response code="20қ">If the photo is successfully deleted.</response>
+        /// <response code="400">If the photo is the main one and cannot be deleted.</response>
+        /// <response code="401">If the user is not logged in.</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DeletePhoto(long userId, long id)
         {
-            if (userId != long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value))
-                return Unauthorized();
+            await _photoService.DeletePhoto(userId, id);
 
-            var userFromDb = await _userManager.GetUserByIdAsync(userId);
-
-            if (!userFromDb!.Photos.Any(p => p.Id == id)) return Unauthorized();
-
-            var photoFromDb = await _photoRepository.GetByIdAsync(id);
-
-            if (photoFromDb!.IsMain) return BadRequest("You cannot delete your main photo");
-
-            if (photoFromDb.PublicId != null)
-            {
-                var deleteParams = new DeletionParams(photoFromDb.PublicId);
-
-                var result = _cloudinary.Destroy(deleteParams);
-
-                if (result.Result == "ok") _photoRepository.Delete(photoFromDb);
-            }
-
-            if (photoFromDb.PublicId == null)
-            {
-                _photoRepository.Delete(photoFromDb);
-            }
-
-            if (await _photoRepository.SaveAll())
-            {
-                return Ok();
-            }
-
-            return BadRequest("Failed to delete the photo");
+            return Ok();
         }
     }
 }

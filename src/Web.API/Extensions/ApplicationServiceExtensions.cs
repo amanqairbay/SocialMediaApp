@@ -1,5 +1,4 @@
-﻿using System;
-using Core.Interfaces;
+﻿using Core.Interfaces;
 using Core.Services;
 using Infrastructure;
 using Infrastructure.Data;
@@ -8,6 +7,9 @@ using Web.API.Helpers;
 
 namespace Web.API.Extensions
 {
+    /// <summary>
+    /// Represents the application service extensions.
+    /// </summary>
     public static class ApplicationServiceExtensions
     {
         public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services,
@@ -17,7 +19,12 @@ namespace Web.API.Extensions
             services.ConfigureSqlContext(configuration);
             services.ConfigureCloudinary(configuration);
             services.AddSingleton<ILoggerManager, LoggerManager>();
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<IUserSettingsService, UserSettingsService>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddScoped<LogUserActivity>();

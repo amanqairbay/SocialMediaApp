@@ -1,9 +1,8 @@
-﻿using System;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Core.Entities;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Web.API.Extensions;
 
 namespace Web.API.Helpers
 {

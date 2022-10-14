@@ -27,7 +27,7 @@ namespace Core.Interfaces
         /// A task that represents the asynchronous operation
         /// The task result contains the entity entries
         /// </returns>
-        Task<IReadOnlyList<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync();
 
         /// <summary>
         /// Get entity entry with specification
@@ -47,7 +47,7 @@ namespace Core.Interfaces
         /// A task that represents the asynchronous operation
         /// The task result contains the list of entity entries with specification
         /// </returns>
-        Task<IReadOnlyList<T>> GetAllWithSpecificationAsync(ISpecification<T> specification);
+        Task<IEnumerable<T>> GetAllWithSpecificationAsync(ISpecification<T> specification);
 
         /// <summary>
         /// Adds the entity

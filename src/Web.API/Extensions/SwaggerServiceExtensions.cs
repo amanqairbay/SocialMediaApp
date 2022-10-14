@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using CloudinaryDotNet.Actions;
 using Microsoft.OpenApi.Models;
 
 namespace Web.API.Extensions
@@ -12,11 +14,27 @@ namespace Web.API.Extensions
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SocialMedia API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Social Media App API",
+                    Version = "v1",
+                    Description = "Social Media App API by Aman Qairbay",
+                    TermsOfService = new Uri("https://github.com/amanqairbay/SocialMediaApp"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Aman Qairbay",
+                        Email = "amanqairbay@gmail.com",
+                        Url = new Uri("https://github.com/amanqairbay")
+                    }
+                });
+
+                var xmlFile = $"{typeof(Program).GetTypeInfo().Assembly.GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
 
                 var securitySchema = new OpenApiSecurityScheme
                 {
-                    Description = "JWT Auth Beare Schema",
+                    Description = "JWT Auth Bearer Schema",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,

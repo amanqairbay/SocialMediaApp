@@ -1,9 +1,8 @@
-﻿using System;
-using Core.Errors;
+﻿using Core.Errors;
 using Infrastructure.Data;
+using Infrastructure.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Web.API.Helpers;
 
 namespace Web.API.Extensions
 {

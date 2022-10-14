@@ -12,7 +12,7 @@ namespace Core.Specifications
         /// <summary>
         /// Criteria for obtaining data
         /// </summary>
-        public Expression<Func<T, bool>> Criteria { get; } = default!;
+        public Expression<Func<T, bool>> Criteria { get; set; } = default!;
 
         /// <summary>
         /// Includes collection to load related data

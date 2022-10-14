@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Web.API</name>
+    </assembly>
+    <members>
+        <member name="M:Web.API.Controllers.AuthController.GetCurrentUser">
+            <summary>
+            Gets and returns the current user.
+            </summary>
+            <returns>
+            A task that represents the asynchronous operation, containing the user.
+            </returns>
+            <response code="200">If the current user is received.</response>
+        </member>
+        <member name="M:Web.API.Controllers.AuthController.CheckEmailExistsAsync(System.String)">
+            <summary>
+            Checks if the mail exists.
+            </summary>
+            <param name="email">The user email to check for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing a boolean result.
+            </returns>
+        </member>
+        <member name="M:Web.API.Controllers.AuthController.Login(Core.DTOs.User.UserToLoginDto)">
+            <summary>
+            Login.
+            </summary>
+            <param name="loginDto">The user data to login for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the user.
+            </returns>
+            <response code="200">If the user is logged in.</response>
+            <response code="401">If the user is not logged in.</response>
+        </member>
+        <member name="M:Web.API.Controllers.AuthController.Register(Core.DTOs.User.UserForRegisterDto)">
+            <summary>
+            Registers a new user.
+            </summary>
+            <param name="registerDto">The user dat to register for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the user.
+            </returns>
+            <response code="200">If registration is successful.</response>
+            <response code="400">If the user mail address is in use or invalid syntax for this request.</response>
+        </member>
+        <member name="M:Web.API.Controllers.MessagesController.GetMessage(System.Int64,System.Int64)">
+            <summary>
+            Gets and returns a message, if any, that has the specified <paramref name="id" />.
+            </summary>
+            <param name="userId">The current user identifier.</param>
+            <param name="id">The message identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the message matching the specified <paramref name="id" /> if it exists.
+            </returns>
+            <response code="200">If the message exists.</response>
+            <response code="401">If the user is not logged in.</response>
+            <response code="404">If the message doesn't exist.</response>
+        </member>
+        <member name="M:Web.API.Controllers.MessagesController.CreateMessage(System.Int64,Core.DTOs.Message.MessageForCreationDto)">
+            <summary>
+            Creates the message.
+            </summary>
+            <param name="userId">The sender user identifier.</param>
+            <param name="messageForCreationDto">The message data to create for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing a message, its identifier, and the sender's identifier.
+            </returns>
+            <response code="200">If the message successfully created.</response>
+            <response code="400">If the message could not be created.</response>
+            <response code="401">If the user is not logged in.</response>
+        </member>
+        <member name="M:Web.API.Controllers.MessagesController.GetMessageForUser(System.Int64,Core.RequestFeatures.MessageParameters)">
+            <summary>
+            Gets and returns a list of messages by parameters.
+            </summary>
+            <param name="userId">The current user identifier.</param>
+            <param name="messageParams">The message params to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the list of messages.
+            </returns>
+            <response code="200">If the message is returned.</response>
+            <response code="401">If the user is not logged in.</response>
+        </member>
+        <member name="M:Web.API.Controllers.MessagesController.GetMessageThread(System.Int64,System.Int64)">
+            <summary>
+            Gets and returns a message thread, if any, that has the specified <paramref name="userId" /> and <paramref name="recipientId" />.
+            </summary>
+            <param name="userId">The sender user identifier to get for.</param>
+            <param name="recipientId">The recipient identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the message thread the specified <paramref name="userId" /> and <paramref name="recipientId" /> if it exists.
+            </returns>
+            <response code="200">If the messages are returned.</response>
+            <response code="401">If the sender user is not logged in.</response>
+        </member>
+        <member name="M:Web.API.Controllers.PhotosController.GetPhoto(System.Int64)">
+            <summary>
+            Gets and returns a photo, if any, that has the specified <paramref name="id" />.
+            </summary>
+            <param name="id">The photo identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the photo matching the specified <paramref name="photoId" /> if it exists.
+            </returns>
+            <response code="200">If the photo exists.</response>
+            <response code="404">If the photo doesn't exist.</response>
+        </member>
+        <member name="M:Web.API.Controllers.PhotosController.AddPhotoForUser(System.Int64,Core.DTOs.Photo.PhotoForCreationDto)">
+            <summary>
+            Adds a new photo for the user.
+            </summary>
+            <param name="userId">The user identifier to get for.</param>
+            <param name="photoForCreationDto">The photo to return for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing a photo and the result of adding it.
+            </returns>
+            <response code="201">If the photo successfully added.</response>
+            <response code="400">If the photo could not be added.</response>
+            <response code="401">If the user is not logged in.</response>
+        </member>
+        <member name="M:Web.API.Controllers.PhotosController.SetMainPhoto(System.Int64,System.Int64)">
+            <summary>
+            Sets the user's main photo. 
+            </summary>
+            <param name="userId">The user identifier to get for.</param>
+            <param name="id">The photo identifier to set for.</param>
+            <returns>
+            A task that represents an asynchronous operation containing the result of setting the main photo.
+            </returns>
+            <response code="204">If the photo is successfully installed as the main one.</response>
+            <response code="400">If the photo is already set as the main one or cannot be set.</response>
+            <response code="401">If the user is not logged in.</response>
+        </member>
+        <member name="M:Web.API.Controllers.PhotosController.DeletePhoto(System.Int64,System.Int64)">
+            <summary>
+            Deletes the photo, if any, that has the specified <paramref name="id" />.
+            </summary>
+            <param name="userId">The user identifier to get for.</param>
+            <param name="id">The photo identifier to get for.</param>
+            <returns>
+            A task that represents an asynchronous operation containing the result of deleting the user photo.
+            </returns>
+            <response code="20қ">If the photo is successfully deleted.</response>
+            <response code="400">If the photo is the main one and cannot be deleted.</response>
+            <response code="401">If the user is not logged in.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UsersController.GetPgedListUsers(Core.RequestFeatures.UserParameters)">
+            <summary>
+            Gets and returns a list of users by parameters.
+            </summary>
+            <param name="userParams">The user params to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the list of users.
+            </returns>
+        </member>
+        <member name="M:Web.API.Controllers.UsersController.GetUser(System.Int64)">
+            <summary>
+            Gets and returns a user, if any, who has the specified <paramref name="id" />.
+            </summary>
+            <param name="id">The user identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the user matching the specified <paramref name="id" /> if it exists.
+            </returns>
+            <response code="200">If the user exists.</response>
+            <response code="404">If the user doesn't exist.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UsersController.UpdateUser(System.Int64,Core.DTOs.User.UserForUpdateDto)">
+            <summary>
+            Updates the user.
+            </summary>
+            <param name="id">The user identifier to get for.</param>
+            <param name="userForUpdateDto">The user to update for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the result of the user update.
+            </returns>
+            <response code="204">if the user is successfully updated.</response>
+            <response code="400">If the user update could not be saved.</response>
+            <response code="401">If the user is not logged in.</response>
+            <response code="404">If the user doesn't exist.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UsersController.LikeUser(System.Int64,System.Int64)">
+            <summary>
+            Likes the user.
+            </summary>
+            <param name="id">The user identifier to get for.</param>
+            <param name="recipientId">The recipient identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the result of the user's like.
+            </returns>
+            <response code="400">If the user already like or failed to like.</response>
+            <response code="401">If the user is not logged in.</response>
+            <response code="404">If the user (recipient) doesn't exist.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UserSettingsController.GetRegionsAsync">
+            <summary>
+            Gets and returns a list of regions.
+            </summary>
+            <returns>
+            A task that represents the asynchronous operation, containing the list of regions.
+            </returns>
+            <response code="200">If all regions successfully returned.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UserSettingsController.GetRegionByIdAsync(System.Int64)">
+            <summary>
+            Gets and returns a region, if any, that has the specified <paramref name="id" />.
+            </summary>
+            <param name="id">The region identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the region matching the specified <paramref name="regionId" /> if it exists.
+            </returns>
+            <response code="200">If the region successfully returned.</response>
+            <response code="404">If the region doesn't exist.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UserSettingsController.GetCitiesAsync">
+            <summary>
+            Gets and returns a city, if any, that has the specified <paramref name="id" />.
+            </summary>
+            <param name="id">The city identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the region matching the specified <paramref name="cityId" /> if it exists.
+            </returns>
+            <response code="200">If all cities successfully returned.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UserSettingsController.GetCityByIdAsync(System.Int64)">
+            <summary>
+            Gets and returns a city, if any, that has the specified <paramref name="id" />.
+            </summary>
+            <param name="id">The city identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the region matching the specified <paramref name="cityId" /> if it exists.
+            </returns>
+            <response code="200">If the city successfully returned.</response>
+            <response code="404">If the city doesn't exist.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UserSettingsController.GetGendersAsync">
+            <summary>
+            Gets and returns a list of genders.
+            </summary>
+            <returns>
+            A task that represents the asynchronous operation, containing the list of genders.
+            </returns>
+            <response code="200">If all genders successfully returned.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UserSettingsController.GetGenderByIdAsync(System.Int64)">
+            <summary>
+            Gets and returns a gender, if any, that has the specified <paramref name="id" />.
+            </summary>
+            <param name="id">The gender identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the gender matching the specified <paramref name="genderId" /> if it exists.
+            </returns>
+            <response code="200">If the gender successfully returned.</response>
+            <response code="404">If the gender doesn't exist.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UserSettingsController.GetStatusesAsync">
+            <summary>
+            Gets and returns a list of statuses.
+            </summary>
+            <returns>
+            A task that represents the asynchronous operation, containing the list of statuses.
+            </returns>
+            <response code="200">If all statuses successfully returned.</response>
+        </member>
+        <member name="M:Web.API.Controllers.UserSettingsController.GetStatusesByIdAsync(System.Int64)">
+            <summary>
+            Gets and returns a status, if any, that has the specified <paramref name="id" />.
+            </summary>
+            <param name="id">The status identifier to get for.</param>
+            <returns>
+            A task that represents the asynchronous operation, containing the status matching the specified <paramref name="statusId" /> if it exists.
+            </returns>
+            <response code="200">If the status successfully returned.</response>
+            <response code="404">If the status doesn't exist.</response>
+        </member>
+        <member name="T:Web.API.Extensions.ApplicationServiceExtensions">
+            <summary>
+            Represents the application service extensions.
+            </summary>
+        </member>
+        <member name="T:Web.API.Extensions.SwaggerServiceExtensions">
+            <summary>
+            Swagger service extensions
+            </summary>
+        </member>
+        <member name="T:Web.API.Helpers.MappingProfile">
+            <summary>
+            Mapping profile
+            </summary>
+        </member>
+        <member name="T:Web.API.Middleware.ExceptionMiddleware">
+            <summary>
+            Api exception middleware.
+            </summary>
+        </member>
+    </members>
+</doc>
