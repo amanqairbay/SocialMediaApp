@@ -38,7 +38,7 @@ namespace Web.API.Controllers
         /// </summary>
         /// <param name="id">The region identifier to get for.</param>
         /// <returns>
-        /// A task that represents the asynchronous operation, containing the region matching the specified <paramref name="regionId" /> if it exists.
+        /// A task that represents the asynchronous operation, containing the region matching the specified <paramref name="id" /> if it exists.
         /// </returns>
         /// <response code="200">If the region successfully returned.</response>
         /// <response code="404">If the region doesn't exist.</response>
@@ -53,11 +53,10 @@ namespace Web.API.Controllers
         }
 
         /// <summary>
-        /// Gets and returns a city, if any, that has the specified <paramref name="id" />.
+        /// Gets and returns a list of cities/>.
         /// </summary>
-        /// <param name="id">The city identifier to get for.</param>
         /// <returns>
-        /// A task that represents the asynchronous operation, containing the region matching the specified <paramref name="cityId" /> if it exists.
+        /// A task that represents the asynchronous operation, containing the list of cities.
         /// </returns>
         /// <response code="200">If all cities successfully returned.</response>
         [HttpGet("cities")]
@@ -74,7 +73,7 @@ namespace Web.API.Controllers
         /// </summary>
         /// <param name="id">The city identifier to get for.</param>
         /// <returns>
-        /// A task that represents the asynchronous operation, containing the region matching the specified <paramref name="cityId" /> if it exists.
+        /// A task that represents the asynchronous operation, containing the region matching the specified <paramref name="id" /> if it exists.
         /// </returns>
         /// <response code="200">If the city successfully returned.</response>
         /// <response code="404">If the city doesn't exist.</response>
@@ -109,7 +108,7 @@ namespace Web.API.Controllers
         /// </summary>
         /// <param name="id">The gender identifier to get for.</param>
         /// <returns>
-        /// A task that represents the asynchronous operation, containing the gender matching the specified <paramref name="genderId" /> if it exists.
+        /// A task that represents the asynchronous operation, containing the gender matching the specified <paramref name="id" /> if it exists.
         /// </returns>
         /// <response code="200">If the gender successfully returned.</response>
         /// <response code="404">If the gender doesn't exist.</response>
@@ -144,7 +143,7 @@ namespace Web.API.Controllers
         /// </summary>
         /// <param name="id">The status identifier to get for.</param>
         /// <returns>
-        /// A task that represents the asynchronous operation, containing the status matching the specified <paramref name="statusId" /> if it exists.
+        /// A task that represents the asynchronous operation, containing the status matching the specified <paramref name="id" /> if it exists.
         /// </returns>
         /// <response code="200">If the status successfully returned.</response>
         /// <response code="404">If the status doesn't exist.</response>

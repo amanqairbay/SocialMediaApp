@@ -1,4 +1,7 @@
-﻿using Core.Interfaces;
+﻿// Copyright (c) Aman Qairbay. All rights reserved.
+// contact e-mail: amanqairbay@gmail.com
+
+using Core.Interfaces;
 using NLog;
 using Web.API.Extensions;
 using Web.API.Middleware;

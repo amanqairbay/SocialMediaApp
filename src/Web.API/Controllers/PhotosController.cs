@@ -26,7 +26,7 @@ namespace Web.API.Controllers
         /// </summary>
         /// <param name="id">The photo identifier to get for.</param>
         /// <returns>
-        /// A task that represents the asynchronous operation, containing the photo matching the specified <paramref name="photoId" /> if it exists.
+        /// A task that represents the asynchronous operation, containing the photo matching the specified <paramref name="id" /> if it exists.
         /// </returns>
         /// <response code="200">If the photo exists.</response>
         /// <response code="404">If the photo doesn't exist.</response>
